@@ -14,8 +14,10 @@ const TabIcon = ({ icon, title, focused }: TabIconProps) => {
     <View
       className={`flex flex-1 min-h-16 mt-5 overflow-hidden flex-row w-[115px] rounded-full justify-center items-center gap-2 ${focused && "bg-custom-violet-600"}`}
     >
-      <Ionicons name={icon} size={24} color={focused ? "black" : "#888ada"} />
-      {focused && <Text className={"font-bold"}>{title}</Text>}
+      <Ionicons name={icon} size={24} color={focused ? "#E6E6E6" : "#888ada"} />
+      {focused && (
+        <Text className={"font-bold text-custom-white-100"}>{title}</Text>
+      )}
     </View>
   );
 };
