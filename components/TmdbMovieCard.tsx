@@ -1,0 +1,80 @@
+import React from "react";
+import { Button, Image, Text, TouchableOpacity, View } from "react-native";
+import { Link } from "expo-router";
+import { MovieTmbd } from "@/types/MovieTypes";
+import Ionicons from "@expo/vector-icons/Ionicons";
+import { MovieDataToDisplayInModalToSave } from "@/types/UserMovieTypes";
+
+type MovieCardProps = {
+  movieData: MovieTmbd;
+  onSaveMovie?: (data: MovieDataToDisplayInModalToSave) => void;
+};
+
+const TmdbMovieCard = ({ movieData, onSaveMovie }: MovieCardProps) => {
+  const { id, title, poster_path, vote_average, release_date } = movieData;
+  const imagePath = `https://image.tmdb.org/t/p/w500${poster_path}`;
+
+  return (
+    <Link href={`/movies/${id}`} asChild={true}>
+      <TouchableOpacity className={"w-[30%] h-auto relative"}>
+        <TouchableOpacity
+          className={
+            "absolute right-1 top-1 z-10 size-8 items-center justify-center flex-1 rounded-full bg-custom-violet-400"
+          }
+          onPress={(event) => {
+            event.stopPropagation();
+            onSaveMovie?.({
+              id: `${id}`,
+              title: title,
+            });
+          }}
+        >
+          <Ionicons
+            name="heart"
+            size={24}
+            color="#e6e6e6"
+            className={"mt-0.5"}
+          />
+        </TouchableOpacity>
+
+        <Image
+          key={poster_path}
+          source={{
+            uri: poster_path
+              ? imagePath
+              : "https://placehold.co/600x400/1a1a1a/ffffff.png",
+          }}
+          className={"w-full h-52 rounded-lg"}
+          resizeMode="cover"
+        />
+
+        <View className={"flex-col gap-1"}>
+          <Text
+            numberOfLines={1}
+            className={"text-sm text-custom-white-100 font-bold"}
+          >
+            {title}
+          </Text>
+
+          <View className={"flex-row items-center justify-start gap-1"}>
+            <Ionicons name="star" size={16} color="#3e55c6" />
+            <Text className={"text-sm font-bold text-custom-white-100"}>
+              {Math.round(vote_average / 2)}
+            </Text>
+          </View>
+
+          <View className={"flex-row items-center justify-between"}>
+            <Text className={"text-xs text-custom-white-100"}>
+              {release_date.substring(2)}
+            </Text>
+            <Text className={"text-xs uppercase text-custom-white-100"}>
+              Movie
+            </Text>
+          </View>
+        </View>
+      </TouchableOpacity>
+    </Link>
+  );
+};
+
+export default TmdbMovieCard;

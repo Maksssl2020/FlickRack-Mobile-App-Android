@@ -5,9 +5,16 @@ import Ionicons from "@expo/vector-icons/Ionicons";
 type SearchBarProps = {
   placeholder: string;
   onPress?: () => void;
+  value?: string;
+  onChangeText?: (value: string) => void;
 };
 
-const SearchBar = ({ onPress, placeholder }: SearchBarProps) => {
+const SearchBar = ({
+  value,
+  onPress,
+  onChangeText,
+  placeholder,
+}: SearchBarProps) => {
   return (
     <View
       className={
@@ -18,9 +25,9 @@ const SearchBar = ({ onPress, placeholder }: SearchBarProps) => {
       <TextInput
         onPress={onPress}
         placeholder={placeholder}
-        value={""}
-        onChangeText={() => {}}
+        value={value}
         placeholderTextColor={"#E6E6E6"}
+        onChangeText={(value) => onChangeText?.(value)}
         className={"flex-1 ml-2 text-custom-white-100 placeholder:text-xl"}
       />
     </View>

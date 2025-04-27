@@ -1,15 +1,27 @@
-import React, { useState } from "react";
+import React from "react";
 
-import { ScrollView, Text, View } from "react-native";
+import { ActivityIndicator, ScrollView, Text, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import FormField from "@/components/FormField";
 import CustomButton from "@/components/CustomButton";
 import { Link, router } from "expo-router";
+import { Controller, useForm } from "react-hook-form";
+import useLoginMutation from "@/hooks/mutations/useLoginMutation";
 
 const SignIn = () => {
-  const [form, setForm] = useState({
-    username: "",
-    password: "",
+  const {
+    control,
+    handleSubmit,
+    formState: { errors },
+  } = useForm({
+    defaultValues: {
+      username: "",
+      password: "",
+    },
+  });
+
+  const { login, logging } = useLoginMutation(() => {
+    router.push("/home");
   });
 
   return (
@@ -32,26 +44,58 @@ const SignIn = () => {
             </Text>
           </View>
           <View className={"w-full h-auto flex flex-col gap-4 mt-8"}>
-            <FormField
-              title={"Username"}
-              value={form.username}
-              textType={"password"}
-              onChange={(e) => setForm({ ...form, username: e })}
+            <Controller
+              control={control}
+              rules={{
+                required: {
+                  value: true,
+                  message: "Username is required.",
+                },
+              }}
+              render={({ field: { onChange, onBlur, value } }) => (
+                <FormField
+                  title={"Username"}
+                  value={value}
+                  textType={"username"}
+                  onChange={onChange}
+                  onBlur={onBlur}
+                  error={errors?.username?.message}
+                />
+              )}
+              name={"username"}
             />
-            <FormField
-              title={"Password"}
-              value={form.password}
-              textType={"password"}
-              onChange={(e) => setForm({ ...form, password: e })}
+            <Controller
+              control={control}
+              rules={{
+                required: {
+                  value: true,
+                  message: "Password is required.",
+                },
+              }}
+              render={({ field: { onChange, onBlur, value } }) => (
+                <FormField
+                  title={"Password"}
+                  value={value}
+                  textType={"password"}
+                  onChange={onChange}
+                  onBlur={onBlur}
+                  error={errors?.password?.message}
+                />
+              )}
+              name={"password"}
             />
           </View>
 
           <View className={"w-full h-auto flex flex-col gap-2 mt-12"}>
             <CustomButton
               title={"Sign In"}
-              onPress={() => {
-                router.push("/home");
-              }}
+              onPress={handleSubmit((data) =>
+                login({
+                  username: data.username,
+                  password: data.password,
+                }),
+              )}
+              isLoading={logging}
             />
             <View
               className={"flex flex-row w-full gap-2 h-auto justify-center"}

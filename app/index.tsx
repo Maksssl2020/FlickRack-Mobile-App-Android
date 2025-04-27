@@ -4,8 +4,18 @@ import { LinearGradient } from "expo-linear-gradient";
 import CustomButton from "@/components/CustomButton";
 import { StatusBar } from "expo-status-bar";
 import { Link, router } from "expo-router";
+import { useAuthenticationStore } from "@/store/AuthenticationStore";
+import { useEffect } from "react";
 
 export default function Index() {
+  const { isAuthenticated } = useAuthenticationStore.getState().authentication;
+
+  useEffect(() => {
+    if (isAuthenticated) {
+      router.push("/home");
+    }
+  }, [isAuthenticated]);
+
   return (
     <SafeAreaView
       className={"flex-1 justify-center  items-center bg-custom-black-100"}

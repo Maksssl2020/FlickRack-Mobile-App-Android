@@ -1,6 +1,7 @@
 import { Stack } from "expo-router";
 import "./global.css";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import Toast from "react-native-toast-message";
 
 const queryClient = new QueryClient();
 
@@ -25,6 +26,7 @@ export default function RootLayout() {
           }}
         />
       </Stack>
+      <Toast />
     </QueryClientProvider>
   );
 }

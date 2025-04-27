@@ -1,6 +1,6 @@
 import React from "react";
 
-import { Text, TouchableOpacity } from "react-native";
+import { ActivityIndicator, Text, TouchableOpacity } from "react-native";
 import { LinearGradient } from "expo-linear-gradient";
 
 type CustomButtonProps = {
@@ -9,6 +9,7 @@ type CustomButtonProps = {
   buttonClassName?: string;
   textClassName?: string;
   isLoading?: boolean;
+  children?: React.ReactNode;
 };
 
 const CustomButton = ({
@@ -17,6 +18,7 @@ const CustomButton = ({
   buttonClassName,
   textClassName,
   isLoading,
+  children,
 }: CustomButtonProps) => {
   return (
     <TouchableOpacity
@@ -34,11 +36,17 @@ const CustomButton = ({
         colors={["#7278d4", "#5a66cd", "#3e55c6"]}
         start={{ x: 0, y: 3 }}
       />
-      <Text
-        className={`text-2xl font-bold text-custom-white-100 ${textClassName}`}
-      >
-        {title}
-      </Text>
+      {isLoading ? (
+        <ActivityIndicator size="large" color="#e6e6e6" />
+      ) : children ? (
+        children
+      ) : (
+        <Text
+          className={`text-2xl font-bold text-custom-white-100 ${textClassName}`}
+        >
+          {title}
+        </Text>
+      )}
     </TouchableOpacity>
   );
 };

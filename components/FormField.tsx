@@ -7,16 +7,20 @@ type FormFieldProps = {
   title: string;
   value: string;
   onChange: (value: string) => void;
+  onBlur?: () => void;
   containerClassName?: string;
   textType?: "username" | "emailAddress" | "password";
+  error?: string;
 };
 
 const FormField = ({
   title,
   value,
   onChange,
+  onBlur,
   containerClassName,
   textType,
+  error,
 }: FormFieldProps) => {
   const [showPassword, setShowPassword] = useState(false);
   const [isFocused, setFocused] = useState(false);
@@ -45,7 +49,10 @@ const FormField = ({
           }
           textContentType={textType}
           onFocus={() => setFocused(true)}
-          onBlur={() => setFocused(false)}
+          onBlur={() => {
+            setFocused(false);
+            onBlur?.();
+          }}
         />
 
         {title.toLowerCase().includes("password") && (
@@ -58,6 +65,7 @@ const FormField = ({
           </TouchableOpacity>
         )}
       </View>
+      <Text className={"text-lg text-red-500"}>{error && error}</Text>
     </View>
   );
 };
