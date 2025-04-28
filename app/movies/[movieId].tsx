@@ -1,17 +1,9 @@
 import React from "react";
 
-import {
-  ActivityIndicator,
-  Image,
-  ScrollView,
-  Text,
-  TouchableOpacity,
-  View,
-} from "react-native";
+import { ActivityIndicator, Image, ScrollView, Text, View } from "react-native";
 import { router, useLocalSearchParams } from "expo-router";
 import useTmdbMovieByIdQuery from "@/hooks/queries/useTmdbMovieByIdQuery";
 import Ionicons from "@expo/vector-icons/Ionicons";
-import { Label } from "@react-navigation/elements";
 import CustomButton from "@/components/CustomButton";
 
 const MovieDetails = () => {
@@ -19,8 +11,6 @@ const MovieDetails = () => {
   const { movieDataById, fetchingMovieById } = useTmdbMovieByIdQuery(
     movieId.toString(),
   );
-
-  console.log(movieId.toString());
 
   return (
     <View className={"bg-custom-black-100 flex-1"}>
@@ -125,7 +115,7 @@ const MovieDetails = () => {
       <CustomButton
         title={""}
         onPress={router.back}
-        buttonClassName={"absolute bottom-4  self-center "}
+        buttonClassName={"absolute bottom-4 self-center w-[95%]"}
       >
         <View className={"flex-row items-center gap-2"}>
           <Ionicons name={"arrow-back"} size={24} color={"#E6E6E6"} />

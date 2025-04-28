@@ -5,6 +5,7 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import AppNameBanner from "@/components/AppNameBanner";
 import useUserMoviesQuery from "@/hooks/queries/useUserMoviesQuery";
 import TmdbMovieCard from "@/components/TmdbMovieCard";
+import SavedTmdbMovieCard from "@/components/SavedTmdbMovieCard";
 
 const Saved = () => {
   const { userMovies, fetchingUserMovies } = useUserMoviesQuery();
@@ -15,7 +16,7 @@ const Saved = () => {
     >
       <FlatList
         data={userMovies}
-        renderItem={({ item }) => <TmdbMovieCard movieData={item.movie} />}
+        renderItem={({ item }) => <SavedTmdbMovieCard movieData={item} />}
         keyExtractor={(item) => item.movie.id.toString()}
         className={"px-5 w-full"}
         numColumns={3}

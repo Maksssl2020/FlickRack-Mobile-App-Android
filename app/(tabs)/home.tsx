@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 
 import { ActivityIndicator, FlatList, Text, View } from "react-native";
 import { StatusBar } from "expo-status-bar";
@@ -12,17 +12,31 @@ import useMetricsQuery from "@/hooks/queries/useMetricsQuery";
 import TrendingMovieCard from "@/components/TrendingMovieCard";
 import { MovieDataToDisplayInModalToSave } from "@/types/UserMovieTypes";
 import SaveMovieModal from "@/components/SaveMovieModal";
+import useUserMoviesIdsQuery from "@/hooks/queries/useUserMoviesIdsQuery";
 
 const Home = () => {
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
   const [chosenMovieData, setChosenMovieData] = useState<
     MovieDataToDisplayInModalToSave | undefined
   >(undefined);
+  const [fetchedUserMoviesIds, setFetchedUserMoviesIds] = useState<Set<number>>(
+    new Set(),
+  );
   const { tmdbMovies, fetchingTmdbMovies } = useTmdbMoviesQuery();
+  const { userMoviesIds, fetchingUserMoviesIds } = useUserMoviesIdsQuery();
   const { metrics, fetchingMetrics } = useMetricsQuery();
   const router = useRouter();
 
-  const isLoading = fetchingTmdbMovies || fetchingMetrics;
+  useEffect(() => {
+    if (!fetchingUserMoviesIds && fetchedUserMoviesIds) {
+      setFetchedUserMoviesIds(new Set(userMoviesIds));
+    }
+  }, [userMoviesIds]);
+
+  const isLoading =
+    fetchingTmdbMovies || fetchingMetrics || fetchingUserMoviesIds;
+
+  console.log(fetchedUserMoviesIds);
 
   return (
     <SafeAreaView className={"w-full h-full flex-1 bg-custom-black-100"}>
@@ -90,6 +104,7 @@ const Home = () => {
               setChosenMovieData(data);
               setIsModalOpen(true);
             }}
+            isSavedMovie={fetchedUserMoviesIds.has(item.id)}
           />
         )}
       />

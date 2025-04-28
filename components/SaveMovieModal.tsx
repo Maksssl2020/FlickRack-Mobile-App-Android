@@ -99,15 +99,15 @@ const SaveMovieModal = ({
             </Text>
           </TouchableOpacity>
         </View>
-        <View className={"flex-row  justify-between mt-4"}>
+        <View className={"flex flex-row justify-between mt-4"}>
           <CustomButton
-            buttonClassName={"w-[49%]"}
+            buttonClassName={"w-[48%]"}
             title={"Cancel"}
             onPress={onClose}
           />
           <CustomButton
             isLoading={savingUserMovie}
-            buttonClassName={"w-[49%]"}
+            buttonClassName={"w-[48%]"}
             title={"Save"}
             onPress={() => onSubmit()}
           />

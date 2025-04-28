@@ -1,41 +1,68 @@
-import React from "react";
-import { Button, Image, Text, TouchableOpacity, View } from "react-native";
+import React, { useRef } from "react";
+import { Animated, Image, Text, TouchableOpacity, View } from "react-native";
 import { Link } from "expo-router";
 import { MovieTmbd } from "@/types/MovieTypes";
 import Ionicons from "@expo/vector-icons/Ionicons";
 import { MovieDataToDisplayInModalToSave } from "@/types/UserMovieTypes";
 
-type MovieCardProps = {
+type TmdbMovieCard = {
   movieData: MovieTmbd;
   onSaveMovie?: (data: MovieDataToDisplayInModalToSave) => void;
+  isSavedMovie?: boolean;
+  isHeartIconVisible?: boolean;
 };
 
-const TmdbMovieCard = ({ movieData, onSaveMovie }: MovieCardProps) => {
+const TmdbMovieCard = ({
+  movieData,
+  onSaveMovie,
+  isSavedMovie = false,
+  isHeartIconVisible = true,
+}: TmdbMovieCard) => {
   const { id, title, poster_path, vote_average, release_date } = movieData;
   const imagePath = `https://image.tmdb.org/t/p/w500${poster_path}`;
+  const scaleAnimation = useRef(new Animated.Value(1)).current;
 
   return (
     <Link href={`/movies/${id}`} asChild={true}>
       <TouchableOpacity className={"w-[30%] h-auto relative"}>
-        <TouchableOpacity
-          className={
-            "absolute right-1 top-1 z-10 size-8 items-center justify-center flex-1 rounded-full bg-custom-violet-400"
-          }
-          onPress={(event) => {
-            event.stopPropagation();
-            onSaveMovie?.({
-              id: `${id}`,
-              title: title,
-            });
-          }}
-        >
-          <Ionicons
-            name="heart"
-            size={24}
-            color="#e6e6e6"
-            className={"mt-0.5"}
-          />
-        </TouchableOpacity>
+        {isHeartIconVisible && (
+          <Animated.View
+            className={"absolute right-1 top-1 z-10"}
+            style={{
+              transform: [{ scale: scaleAnimation }],
+            }}
+          >
+            <TouchableOpacity
+              className={` size-8 items-center justify-center flex-1 rounded-full ${isSavedMovie ? "bg-custom-white-100 shadow-lg" : "bg-custom-violet-400"}`}
+              onPress={(event) => {
+                event.stopPropagation();
+
+                Animated.sequence([
+                  Animated.spring(scaleAnimation, {
+                    toValue: 1.2,
+                    useNativeDriver: true,
+                  }),
+                  Animated.spring(scaleAnimation, {
+                    toValue: 1.0,
+                    useNativeDriver: true,
+                  }),
+                ]).start();
+
+                onSaveMovie?.({
+                  id: `${id}`,
+                  title: title,
+                });
+              }}
+            >
+              <Ionicons
+                name={isSavedMovie ? "heart" : "heart-outline"}
+                size={24}
+                color={isSavedMovie ? "#ff4d4d" : "#e6e6e6"}
+                className={"mt-0.5"}
+              />
+            </TouchableOpacity>
+          </Animated.View>
+        )}
 
         <Image
           key={poster_path}

@@ -16,6 +16,8 @@ const initialAuthenticationState: AuthenticationState = {
   username: null,
   accessToken: null,
   userId: null,
+  email: null,
+  createdAt: null,
 };
 
 export const useAuthenticationStore = create<AuthenticationStoreState>()(
