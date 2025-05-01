@@ -10,11 +10,11 @@ import { useEffect } from "react";
 export default function Index() {
   const { isAuthenticated } = useAuthenticationStore.getState().authentication;
 
-  useEffect(() => {
-    if (isAuthenticated) {
-      router.push("/home");
-    }
-  }, [isAuthenticated]);
+  // useEffect(() => {
+  //   if (isAuthenticated) {
+  //     router.push("/home");
+  //   }
+  // }, [isAuthenticated]);
 
   return (
     <SafeAreaView

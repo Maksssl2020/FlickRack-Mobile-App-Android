@@ -3,7 +3,8 @@ import {
   AuthenticationState,
 } from "@/types/AuthenticationTypes";
 import { create } from "zustand/react";
-import { persist } from "zustand/middleware";
+import { createJSONStorage, persist } from "zustand/middleware";
+import AsyncStorageNative from "@react-native-async-storage/async-storage/src/AsyncStorage.native";
 
 type AuthenticationStoreState = {
   authentication: AuthenticationState;
@@ -38,6 +39,7 @@ export const useAuthenticationStore = create<AuthenticationStoreState>()(
     }),
     {
       name: "auth-storage",
+      storage: createJSONStorage(() => AsyncStorageNative),
     },
   ),
 );

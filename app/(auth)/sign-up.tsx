@@ -72,7 +72,7 @@ const SignUp = () => {
               rules={{
                 required: {
                   value: true,
-                  message: "Username is required.",
+                  message: "E-mail is required.",
                 },
                 pattern: {
                   value: /^[\w\.]+@([\w-]+\.)+[\w-]{2,4}$/,

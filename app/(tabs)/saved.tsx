@@ -1,13 +1,19 @@
-import React from "react";
+import React, { useState } from "react";
 
 import { ActivityIndicator, FlatList, Text, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import AppNameBanner from "@/components/AppNameBanner";
 import useUserMoviesQuery from "@/hooks/queries/useUserMoviesQuery";
-import TmdbMovieCard from "@/components/TmdbMovieCard";
 import SavedTmdbMovieCard from "@/components/SavedTmdbMovieCard";
+import ManageSavedMovieModal from "@/components/ManageSavedMovieModal";
+import { MovieDataToManage } from "@/types/UserMovieTypes";
 
 const Saved = () => {
+  const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
+  const [chosenMovieData, setChosenMovieData] = useState<
+    MovieDataToManage | undefined
+  >(undefined);
+
   const { userMovies, fetchingUserMovies } = useUserMoviesQuery();
 
   return (
@@ -16,7 +22,15 @@ const Saved = () => {
     >
       <FlatList
         data={userMovies}
-        renderItem={({ item }) => <SavedTmdbMovieCard movieData={item} />}
+        renderItem={({ item }) => (
+          <SavedTmdbMovieCard
+            movieData={item}
+            onManageMovie={(data) => {
+              setChosenMovieData(data);
+              setIsModalOpen(true);
+            }}
+          />
+        )}
         keyExtractor={(item) => item.movie.id.toString()}
         className={"px-5 w-full"}
         numColumns={3}
@@ -56,6 +70,12 @@ const Saved = () => {
             <></>
           )
         }
+      />
+
+      <ManageSavedMovieModal
+        isOpen={isModalOpen}
+        onClose={() => setIsModalOpen(false)}
+        movieData={chosenMovieData}
       />
     </SafeAreaView>
   );

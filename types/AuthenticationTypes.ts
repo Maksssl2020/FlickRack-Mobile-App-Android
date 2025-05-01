@@ -25,3 +25,19 @@ export interface LoginRequest {
   username: string;
   password: string;
 }
+
+export interface ChangePasswordRequest {
+  userId: number;
+  currentPassword: string;
+  newPassword: string;
+}
+
+export interface ChangeUsernameRequest {
+  userId: number;
+  newUsername: string;
+}
+
+export interface ChangeEmailRequest {
+  userId: number;
+  newEmail: string;
+}

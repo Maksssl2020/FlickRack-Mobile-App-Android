@@ -2,18 +2,16 @@ import React, { useState } from "react";
 import { Text, TouchableOpacity, View } from "react-native";
 import Modal from "react-native-modal";
 import CustomButton from "@/components/CustomButton";
-import {
-  MovieDataToDisplayInModalToSave,
-  UserMovieStatus,
-} from "@/types/UserMovieTypes";
+import { MovieDataToSave, UserMovieStatus } from "@/types/UserMovieTypes";
 import useSaveUserMovieMutation from "@/hooks/mutations/useSaveUserMovieMutation";
 import { useAuthenticationStore } from "@/store/AuthenticationStore";
 import Toast from "react-native-toast-message";
+import MovieStatusButton from "@/components/MovieStatusButton";
 
 type SaveMovieModalProps = {
   isOpen: boolean;
   onClose: () => void;
-  movieData: MovieDataToDisplayInModalToSave | undefined;
+  movieData: MovieDataToSave | undefined;
 };
 
 const SaveMovieModal = ({
@@ -25,11 +23,11 @@ const SaveMovieModal = ({
     UserMovieStatus | undefined
   >(undefined);
   const { userId } = useAuthenticationStore.getState().authentication;
-  const { saveUserMovie, savingUserMovie } = useSaveUserMovieMutation();
+  const { saveUserMovie, savingUserMovie } = useSaveUserMovieMutation(() => {
+    onClose();
+  });
 
   const onSubmit = () => {
-    console.log("SUBMIT");
-
     if (
       chosenMovieStatus !== undefined &&
       userId !== null &&
@@ -74,30 +72,24 @@ const SaveMovieModal = ({
           <Text className={"text-xl text-custom-white-100"}>
             Select movie status below:
           </Text>
-          <TouchableOpacity
-            onPress={() => setChosenMovieStatus("ToWatch")}
-            className={`w-full h-[40px] justify-center  border-2 rounded-lg border-custom-violet-500 items-center ${chosenMovieStatus === "ToWatch" && "bg-custom-violet-500"}`}
-          >
-            <Text className={"text-custom-white-100 text-xl font-bold"}>
-              To Watch
-            </Text>
-          </TouchableOpacity>
-          <TouchableOpacity
-            onPress={() => setChosenMovieStatus("Watching")}
-            className={`w-full h-[40px] justify-center  border-2 rounded-lg border-custom-violet-500 items-center ${chosenMovieStatus === "Watching" && "bg-custom-violet-500"}`}
-          >
-            <Text className={"text-custom-white-100  text-xl font-bold"}>
-              Watching
-            </Text>
-          </TouchableOpacity>
-          <TouchableOpacity
-            onPress={() => setChosenMovieStatus("Watched")}
-            className={`w-full h-[40px] justify-center  border-2 rounded-lg border-custom-violet-500 items-center ${chosenMovieStatus === "Watched" && "bg-custom-violet-500"}`}
-          >
-            <Text className={"text-custom-white-100  text-xl font-bold"}>
-              Watched
-            </Text>
-          </TouchableOpacity>
+          <MovieStatusButton
+            title={"To Watch"}
+            buttonMovieStatus={"ToWatch"}
+            currentMovieStatus={chosenMovieStatus}
+            setMovieStatus={setChosenMovieStatus}
+          />
+          <MovieStatusButton
+            title={"Watching"}
+            buttonMovieStatus={"Watching"}
+            currentMovieStatus={chosenMovieStatus}
+            setMovieStatus={setChosenMovieStatus}
+          />
+          <MovieStatusButton
+            title={"Watched"}
+            buttonMovieStatus={"Watched"}
+            currentMovieStatus={chosenMovieStatus}
+            setMovieStatus={setChosenMovieStatus}
+          />
         </View>
         <View className={"flex flex-row justify-between mt-4"}>
           <CustomButton

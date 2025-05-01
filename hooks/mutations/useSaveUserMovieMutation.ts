@@ -6,7 +6,7 @@ import { ApiErrorResponse } from "@/types/ErrorTypes";
 import Toast from "react-native-toast-message";
 import { useAuthenticationStore } from "@/store/AuthenticationStore";
 
-function useSaveUserMovieMutation() {
+function useSaveUserMovieMutation(onSuccess?: () => void) {
   const queryClient = useQueryClient();
   const { userId } = useAuthenticationStore.getState().authentication;
 
@@ -14,6 +14,8 @@ function useSaveUserMovieMutation() {
     mutationKey: ["saveUserMovie"],
     mutationFn: (data: UserMovieRequest) => handleSaveUserMovie(data),
     onSuccess: () => {
+      onSuccess?.();
+
       Toast.show({
         type: "success",
         text1: "Saved movie successfully.",
