@@ -9,13 +9,13 @@ type TmdbActorCardProps = {
 };
 
 const TmdbActorCard = ({ actorData }: TmdbActorCardProps) => {
-  const { actorId, profile_path, name, popularity } = actorData;
+  const { id, profile_path, name, popularity } = actorData;
   const imagePath = `https://image.tmdb.org/t/p/w500/${profile_path}`;
 
   return (
     <TouchableOpacity
       className={"w-[30%] h-auto relative"}
-      onPress={() => router.push(`/actors/${actorId}`)}
+      onPress={() => router.push(`/actors/${id}`)}
     >
       <Image
         key={profile_path}

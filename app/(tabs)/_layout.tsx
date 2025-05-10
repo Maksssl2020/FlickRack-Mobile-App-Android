@@ -1,10 +1,15 @@
 import React from "react";
 import { Tabs } from "expo-router";
 import { Text, View } from "react-native";
-import Ionicons from "@expo/vector-icons/Ionicons";
+import MaterialCommunityIcons from "@expo/vector-icons/MaterialCommunityIcons";
 
 type TabIconProps = {
-  icon: "home-outline" | "search" | "bookmark-outline" | "person-outline";
+  icon:
+    | "home-variant-outline"
+    | "account-search-outline"
+    | "magnify"
+    | "bookmark-outline"
+    | "account-outline";
   focused: boolean;
   title: string;
 };
@@ -12,9 +17,13 @@ type TabIconProps = {
 const TabIcon = ({ icon, title, focused }: TabIconProps) => {
   return (
     <View
-      className={`flex flex-1 min-h-16 mt-5 overflow-hidden flex-row w-[115px] rounded-full justify-center items-center gap-2 ${focused && "bg-custom-violet-600"}`}
+      className={`flex flex-1 min-h-16 mt-5 overflow-hidden flex-row w-[125px] rounded-full justify-center items-center gap-2 ${focused && "bg-custom-violet-600"}`}
     >
-      <Ionicons name={icon} size={24} color={focused ? "#E6E6E6" : "#888ada"} />
+      <MaterialCommunityIcons
+        name={icon}
+        size={24}
+        color={focused ? "#E6E6E6" : "#888ada"}
+      />
       {focused && (
         <Text className={"font-bold text-custom-white-100"}>{title}</Text>
       )}
@@ -37,7 +46,7 @@ const _Layout = () => {
           display: "flex",
           backgroundColor: "#292929",
           borderRadius: 50,
-          marginHorizontal: 15,
+          marginHorizontal: 10,
           marginBottom: 20,
           height: 55,
           position: "absolute",
@@ -51,20 +60,41 @@ const _Layout = () => {
         name={"home"}
         options={{
           title: "Home",
-
           headerShown: false,
           tabBarIcon: ({ focused }) => (
-            <TabIcon icon={"home-outline"} title={"Home"} focused={focused} />
+            <TabIcon
+              icon={"home-variant-outline"}
+              title={"Home"}
+              focused={focused}
+            />
           ),
         }}
       />
       <Tabs.Screen
-        name={"search"}
+        name={"search-movie"}
         options={{
-          title: "Search",
+          title: "Search Movie",
           headerShown: false,
           tabBarIcon: ({ focused }) => (
-            <TabIcon icon={"search"} title={"Search"} focused={focused} />
+            <TabIcon
+              icon={"magnify"}
+              title={"Search Movie"}
+              focused={focused}
+            />
+          ),
+        }}
+      />
+      <Tabs.Screen
+        name={"search-actor"}
+        options={{
+          title: "Search Actor",
+          headerShown: false,
+          tabBarIcon: ({ focused }) => (
+            <TabIcon
+              icon={"account-search-outline"}
+              title={"Search Actor"}
+              focused={focused}
+            />
           ),
         }}
       />
@@ -89,7 +119,7 @@ const _Layout = () => {
           headerShown: false,
           tabBarIcon: ({ focused }) => (
             <TabIcon
-              icon={"person-outline"}
+              icon={"account-outline"}
               title={"Profile"}
               focused={focused}
             />

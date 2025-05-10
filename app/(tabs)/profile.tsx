@@ -69,7 +69,7 @@ const Profile = () => {
         />
       </View>
       <CustomButton
-        buttonClassName={"bottom-32 absolute self-center w-full"}
+        buttonClassName={"bottom-32 absolute self-center w-full h-[50px]"}
         title={""}
         onPress={() => {
           useAuthenticationStore.getState().logout();

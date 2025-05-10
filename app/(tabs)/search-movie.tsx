@@ -6,13 +6,13 @@ import useTmdbMoviesQuery from "@/hooks/queries/useTmdbMoviesQuery";
 import AppNameBanner from "@/components/AppNameBanner";
 import SearchBar from "@/components/SearchBar";
 import { SafeAreaView } from "react-native-safe-area-context";
-import useUpdateMetricsMutation from "@/hooks/mutations/useUpdateMetricsMutation";
+import useUpdateMoviesMetricsMutation from "@/hooks/mutations/useUpdateMoviesMetricsMutation";
 
-const Search = () => {
+const SearchMovie = () => {
   const [query, setQuery] = useState<string>("");
   const { tmdbMovies, fetchingTmdbMovies } = useTmdbMoviesQuery(query);
-  const { updateMetricsCount, updatingMetricsCount } =
-    useUpdateMetricsMutation();
+  const { updateMovieMetricsCount, updatingMovieMetricsCount } =
+    useUpdateMoviesMetricsMutation();
 
   useEffect(() => {
     if (
@@ -22,7 +22,7 @@ const Search = () => {
       query !== ""
     ) {
       const timeout = setTimeout(() => {
-        updateMetricsCount({
+        updateMovieMetricsCount({
           searchTerm: query,
           movieTmdb: tmdbMovies[0],
         });
@@ -55,13 +55,13 @@ const Search = () => {
               <SearchBar
                 value={query}
                 onChangeText={(value) => setQuery(value)}
-                placeholder={"Search for a movie..."}
+                placeholder={"SearchMovie for a movie..."}
               />
             </View>
 
             <View className={"ml-2 mt-5"}>
               {!fetchingTmdbMovies &&
-                !updatingMetricsCount &&
+                !updatingMovieMetricsCount &&
                 query.trim().length > 0 &&
                 tmdbMovies?.length! > 0 && (
                   <Text className={"text-lg font-bold text-custom-white-100"}>
@@ -83,7 +83,7 @@ const Search = () => {
           </>
         }
         ListEmptyComponent={
-          !fetchingTmdbMovies && !updatingMetricsCount ? (
+          !fetchingTmdbMovies && !updatingMovieMetricsCount ? (
             <View className={"mt-10"}>
               <Text
                 className={
@@ -103,4 +103,4 @@ const Search = () => {
   );
 };
 
-export default Search;
+export default SearchMovie;

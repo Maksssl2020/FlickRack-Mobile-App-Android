@@ -37,6 +37,8 @@ export interface MovieTmbd {
 export interface MovieTmdbDetails {
   id: number;
   adult: boolean;
+  isFavourite: boolean;
+  isSavedMovie: boolean;
   overview: string;
   popularity: number;
   title: string;
@@ -73,4 +75,31 @@ interface MovieProductionCountry {
 
 export interface TmdbMovieCardProps {
   movieData: MovieTmbd;
+}
+
+export interface MovieReview {
+  id: string;
+  userId: number;
+  movieId: number;
+  rating: number;
+  content: string;
+  username: string;
+  createdAt: string;
+  updatedAt: string;
+  isUserReview: boolean;
+}
+
+export interface MovieTmbdReview {
+  id: string;
+  author: string;
+  content: string;
+  author_details: MovieTmbdReviewAuthorDetails;
+  created_at: string;
+  updated_at: string;
+}
+
+export interface MovieTmbdReviewAuthorDetails {
+  name: string;
+  username: string;
+  rating: number;
 }

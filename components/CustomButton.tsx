@@ -26,10 +26,9 @@ const CustomButton = ({
       disabled={isLoading}
       activeOpacity={0.8}
       style={{
-        height: 50,
         borderRadius: 5,
       }}
-      className={` flex items-center overflow-hidden justify-center  rounded-xl ${buttonClassName} ${isLoading ? "opacity-50" : ""}`}
+      className={`flex items-center overflow-hidden justify-center  rounded-xl ${buttonClassName} ${isLoading ? "opacity-50" : ""}`}
     >
       <LinearGradient
         className={"absolute h-full w-full"}

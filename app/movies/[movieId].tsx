@@ -1,16 +1,28 @@
-import React from "react";
+import React, { useState } from "react";
 
 import { ActivityIndicator, Image, ScrollView, Text, View } from "react-native";
 import { router, useLocalSearchParams } from "expo-router";
 import useTmdbMovieByIdQuery from "@/hooks/queries/useTmdbMovieByIdQuery";
 import Ionicons from "@expo/vector-icons/Ionicons";
 import CustomButton from "@/components/CustomButton";
+import SaveMovieModal from "@/components/SaveMovieModal";
+import { useAuthenticationStore } from "@/store/AuthenticationStore";
+import AnimatedCustomButton from "@/components/AnimatedCustomButton";
+import useAddFavouriteMovieMutation from "@/hooks/mutations/useAddFavouriteMovieMutation";
+import useDeleteFavouriteMovieMutation from "@/hooks/mutations/useDeleteFavouriteMovieMutation";
 
 const MovieDetails = () => {
+  const { userId } = useAuthenticationStore.getState().authentication;
+  const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
   const { movieId } = useLocalSearchParams();
   const { movieDataById, fetchingMovieById } = useTmdbMovieByIdQuery(
     movieId.toString(),
+    userId,
   );
+  const { addMovieToFavourites, addingMovieToFavourites } =
+    useAddFavouriteMovieMutation();
+  const { deleteMovieFromFavourites, deletingMovieFromFavourites } =
+    useDeleteFavouriteMovieMutation();
 
   return (
     <View className={"bg-custom-black-100 flex-1"}>
@@ -28,6 +40,54 @@ const MovieDetails = () => {
           }}
         >
           <View className={"w-full h-auto"}>
+            <View
+              className={
+                "w-auto h-auto flex-row absolute right-1 top-1 z-10 gap-2"
+              }
+            >
+              <AnimatedCustomButton
+                className={`size-10 ${movieDataById.isFavourite ? "bg-custom-white-100 shadow-lg" : "bg-custom-violet-400"}`}
+                onPress={() => {
+                  if (!movieDataById?.isFavourite) {
+                    if (userId && movieDataById?.id) {
+                      addMovieToFavourites({
+                        userId: userId,
+                        entityId: movieDataById.id,
+                      });
+                    }
+                  } else {
+                    if (userId && movieDataById?.id) {
+                      deleteMovieFromFavourites({
+                        userId: userId,
+                        entityId: movieDataById.id,
+                      });
+                    }
+                  }
+                }}
+                isLoading={
+                  addingMovieToFavourites || deletingMovieFromFavourites
+                }
+              >
+                <Ionicons
+                  name={movieDataById.isFavourite ? "star" : "star-outline"}
+                  size={28}
+                  color={movieDataById.isFavourite ? "#ff4d4d" : "#e6e6e6"}
+                />
+              </AnimatedCustomButton>
+              <AnimatedCustomButton
+                className={`size-10 ${movieDataById.isSavedMovie ? "bg-custom-white-100 shadow-lg" : "bg-custom-violet-400"}`}
+                onPress={() => {
+                  setIsModalOpen(true);
+                }}
+              >
+                <Ionicons
+                  name={movieDataById.isSavedMovie ? "heart" : "heart-outline"}
+                  size={28}
+                  color={movieDataById.isSavedMovie ? "#ff4d4d" : "#e6e6e6"}
+                  className={"mt-0.5"}
+                />
+              </AnimatedCustomButton>
+            </View>
             <Image
               className={"w-full h-[550px]"}
               source={{
@@ -39,6 +99,19 @@ const MovieDetails = () => {
           <View
             className={"flex-col items-start justify-center mt-5 px-5 gap-3"}
           >
+            <CustomButton
+              title={""}
+              onPress={() => router.push(`reviews/${movieDataById!.id}`)}
+              buttonClassName={"self-center w-full h-[50px]"}
+            >
+              <View className={"flex-row items-center gap-2"}>
+                <Text className={"text-xl text-custom-white-100 font-bold"}>
+                  Go To Reviews
+                </Text>
+                <Ionicons name={"arrow-forward"} size={24} color={"#E6E6E6"} />
+              </View>
+            </CustomButton>
+
             <Text className={"text-custom-white-100 font-bold text-2xl"}>
               {movieDataById?.title}
             </Text>
@@ -115,7 +188,7 @@ const MovieDetails = () => {
       <CustomButton
         title={""}
         onPress={router.back}
-        buttonClassName={"absolute bottom-4 self-center w-[95%]"}
+        buttonClassName={"absolute bottom-4 self-center w-[95%] h-[50px]"}
       >
         <View className={"flex-row items-center gap-2"}>
           <Ionicons name={"arrow-back"} size={24} color={"#E6E6E6"} />
@@ -124,6 +197,17 @@ const MovieDetails = () => {
           </Text>
         </View>
       </CustomButton>
+
+      {!fetchingMovieById && movieDataById !== undefined && (
+        <SaveMovieModal
+          isOpen={isModalOpen}
+          onClose={() => setIsModalOpen(false)}
+          movieData={{
+            id: `${movieDataById.id}`,
+            title: movieDataById.title,
+          }}
+        />
+      )}
     </View>
   );
 };

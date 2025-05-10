@@ -13,8 +13,7 @@ const SavedTmdbMovieCard = ({
   movieData,
   onManageMovie,
 }: SavedTmdbMovieCard) => {
-  const { id, title, poster_path, vote_average, release_date } =
-    movieData.movie;
+  const { id, title, poster_path, vote_average, release_date } = movieData.item;
   const imagePath = `https://image.tmdb.org/t/p/w500${poster_path}`;
   const scaleAnimation = useRef(new Animated.Value(1)).current;
   let userMovieStatusToDisplay;

@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React from "react";
 
 import {
   ActivityIndicator,
@@ -9,52 +9,27 @@ import {
   View,
 } from "react-native";
 import { StatusBar } from "expo-status-bar";
-import { SafeAreaView } from "react-native-safe-area-context";
 import AppNameBanner from "@/components/AppNameBanner";
-import SearchBar from "@/components/SearchBar";
 import { useRouter } from "expo-router";
 import useTmdbMoviesQuery from "@/hooks/queries/useTmdbMoviesQuery";
 import TmdbMovieCard from "@/components/TmdbMovieCard";
-import useMetricsQuery from "@/hooks/queries/useMetricsQuery";
+import useMoviesMetricsQuery from "@/hooks/queries/useMoviesMetricsQuery";
 import TrendingMovieCard from "@/components/TrendingMovieCard";
-import { MovieDataToSave } from "@/types/UserMovieTypes";
-import SaveMovieModal from "@/components/SaveMovieModal";
-import useUserMoviesIdsQuery from "@/hooks/queries/useUserMoviesIdsQuery";
-import useActorsQuery from "@/hooks/queries/usePopularActorsQuery";
+import useActorsQuery from "@/hooks/queries/useTmdbActorsQuery";
 import TmdbActorCard from "@/components/TmdbActorCard";
 
 const Home = () => {
-  const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
-  const [chosenMovieData, setChosenMovieData] = useState<
-    MovieDataToSave | undefined
-  >(undefined);
-  const [fetchedUserMoviesIds, setFetchedUserMoviesIds] = useState<Set<number>>(
-    new Set(),
-  );
   const { tmdbMovies, fetchingTmdbMovies } = useTmdbMoviesQuery();
   const { tmdbActors, fetchingTmdbActors } = useActorsQuery();
-  const { userMoviesIds, fetchingUserMoviesIds } = useUserMoviesIdsQuery();
-  const { metrics, fetchingMetrics } = useMetricsQuery();
+  const { moviesMetrics, fetchingMoviesMetrics } = useMoviesMetricsQuery();
   const router = useRouter();
 
-  useEffect(() => {
-    if (!fetchingUserMoviesIds && fetchedUserMoviesIds) {
-      setFetchedUserMoviesIds(new Set(userMoviesIds));
-    }
-  }, [userMoviesIds]);
-
-  const isLoadingMovies =
-    fetchingTmdbMovies || fetchingMetrics || fetchingUserMoviesIds;
-  const isLoadingActors = fetchingTmdbActors;
+  const isLoadingMovies = fetchingTmdbMovies || fetchingMoviesMetrics;
 
   return (
     <ScrollView className={"w-full h-full flex-1 bg-custom-black-100 pt-10"}>
       <View className="flex flex-col gap-4 items-center px-[20px]">
         <AppNameBanner />
-        <SearchBar
-          placeholder="Search for a movie..."
-          onPress={() => router.push("/search")}
-        />
       </View>
 
       <FlatList
@@ -73,14 +48,14 @@ const Home = () => {
         }}
         ListHeaderComponent={
           <View className="mt-6">
-            {metrics && (
+            {moviesMetrics && (
               <>
                 <Text className="ml-2 text-lg text-custom-white-100 font-bold">
                   Trending Movies
                 </Text>
                 <FlatList
                   horizontal
-                  data={metrics}
+                  data={moviesMetrics}
                   keyExtractor={(item) => item.id.toString()}
                   showsHorizontalScrollIndicator={false}
                   contentContainerStyle={{ paddingVertical: 10 }}
@@ -95,7 +70,10 @@ const Home = () => {
               <Text className="ml-2 text-lg text-custom-white-100 font-bold mt-4">
                 Popular Movies
               </Text>
-              <TouchableOpacity className={"mr-2"}>
+              <TouchableOpacity
+                onPress={() => router.push("/movies/movies")}
+                className={"mr-2"}
+              >
                 <Text
                   className={"text-lg text-custom-violet-600 font-bold mt-4"}
                 >
@@ -112,16 +90,7 @@ const Home = () => {
             )}
           </View>
         }
-        renderItem={({ item }) => (
-          <TmdbMovieCard
-            movieData={item}
-            onSaveMovie={(data) => {
-              setChosenMovieData(data);
-              setIsModalOpen(true);
-            }}
-            isSavedMovie={fetchedUserMoviesIds.has(item.id)}
-          />
-        )}
+        renderItem={({ item }) => <TmdbMovieCard movieData={item} />}
       />
 
       <FlatList
@@ -144,7 +113,10 @@ const Home = () => {
               <Text className="ml-2 text-lg text-custom-white-100 font-bold mt-4">
                 Popular Actors
               </Text>
-              <TouchableOpacity className={"mr-2"}>
+              <TouchableOpacity
+                onPress={() => router.push("/actors/actors")}
+                className={"mr-2"}
+              >
                 <Text
                   className={"text-lg text-custom-violet-600 font-bold mt-4"}
                 >
@@ -152,7 +124,7 @@ const Home = () => {
                 </Text>
               </TouchableOpacity>
             </View>
-            {isLoadingActors && (
+            {fetchingTmdbActors && (
               <ActivityIndicator
                 size="large"
                 color="#3e55c6"
@@ -162,12 +134,6 @@ const Home = () => {
           </View>
         }
         renderItem={({ item }) => <TmdbActorCard actorData={item} />}
-      />
-
-      <SaveMovieModal
-        isOpen={isModalOpen}
-        onClose={() => setIsModalOpen(false)}
-        movieData={chosenMovieData}
       />
 
       <StatusBar backgroundColor={"#141414"} style={"light"} />

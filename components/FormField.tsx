@@ -9,8 +9,10 @@ type FormFieldProps = {
   onChange: (value: string) => void;
   onBlur?: () => void;
   containerClassName?: string;
-  textType?: "username" | "emailAddress" | "password";
+  textType?: "username" | "emailAddress" | "password" | "none";
   error?: string;
+  height?: number;
+  textAlignVertical?: "top" | "center";
 };
 
 const FormField = ({
@@ -21,6 +23,8 @@ const FormField = ({
   containerClassName,
   textType,
   error,
+  height = 55,
+  textAlignVertical = "center",
 }: FormFieldProps) => {
   const [showPassword, setShowPassword] = useState(false);
   const [isFocused, setFocused] = useState(false);
@@ -34,14 +38,14 @@ const FormField = ({
           borderWidth: 2,
           borderColor: isFocused ? "#3e55c6" : "#7278d4",
           borderRadius: 10,
-          height: 55,
+          height: height,
         }}
         className={
-          "w-full h-[50px] flex-row relative px-4 items-center justify-center flex border-2 focus:border-custom-pink-600"
+          "w-full flex-row relative px-4 items-center justify-center flex border-2 focus:border-custom-pink-600"
         }
       >
         <TextInput
-          className={"text-custom-white-100 font-medium flex-1"}
+          className={"text-custom-white-100 font-medium flex-1 h-full"}
           value={value}
           onChangeText={onChange}
           secureTextEntry={
@@ -53,6 +57,8 @@ const FormField = ({
             setFocused(false);
             onBlur?.();
           }}
+          multiline={height > 55}
+          textAlignVertical={textAlignVertical}
         />
 
         {title.toLowerCase().includes("password") && (

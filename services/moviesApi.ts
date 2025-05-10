@@ -1,4 +1,9 @@
-import { MovieTmbd, MovieTmdbDetails, MovieTraktTv } from "@/types/MovieTypes";
+import {
+  MovieTmbd,
+  MovieTmbdReview,
+  MovieTmdbDetails,
+  MovieTraktTv,
+} from "@/types/MovieTypes";
 import axiosConfig from "@/services/axiosConfig";
 
 export async function fetchPopularMoviesTraktTv(): Promise<MovieTraktTv[]> {
@@ -24,9 +29,19 @@ export async function fetchMoviesTmdb(query?: string): Promise<MovieTmbd[]> {
 
 export async function fetchMovieByIdTmdb(
   movieId: number,
+  userId: number,
 ): Promise<MovieTmdbDetails> {
   const response = await axiosConfig.get<MovieTmdbDetails>(
-    `/movies/tmdb/movie-data/${movieId}`,
+    `/movies/tmdb/movie-data/${movieId}/${userId}`,
+  );
+  return response.data;
+}
+
+export async function fetchTmdbMovieReviewsByMovieId(
+  movieId: string,
+): Promise<MovieTmbdReview[]> {
+  const response = await axiosConfig.get<MovieTmbdReview[]>(
+    `/movies/tmdb/movie-reviews/${movieId}`,
   );
   return response.data;
 }

@@ -21,6 +21,6 @@ export interface UserMovieRequest {
 
 export interface UserMovie {
   userId: number;
-  movie: MovieTmbd;
+  item: MovieTmbd;
   userMovieStatus: UserMovieStatus;
 }

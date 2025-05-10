@@ -1,28 +1,30 @@
 import React from "react";
 import { Image, Text, TouchableOpacity, View } from "react-native";
-import { Link, router } from "expo-router";
+import { router } from "expo-router";
 import MaskedView from "@react-native-masked-view/masked-view";
-import { MovieMetrics } from "@/types/MetricsTypes";
 import { LinearGradient } from "expo-linear-gradient";
+import { ActorMetrics } from "@/types/MetricsTypes";
 
-type TrendingMovieCardProps = {
-  movieData: MovieMetrics;
+type TrendingActorCardProps = {
+  actorData: ActorMetrics;
   index: number;
 };
 
-const TrendingMovieCard = ({ movieData, index }: TrendingMovieCardProps) => {
-  const { id, movieTitle, moviePosterUrl, movieId } = movieData;
-  const imagePath = `https://image.tmdb.org/t/p/w500${moviePosterUrl}`;
+const TrendingActorCard = ({ actorData, index }: TrendingActorCardProps) => {
+  const { id, name, posterPath, actorId } = actorData;
+  const imagePath = `https://image.tmdb.org/t/p/w500${posterPath}`;
+
+  console.log("TRENDING ActorCard", actorData);
 
   return (
     <TouchableOpacity
-      onPress={() => router.push(`/movies/${movieId}`)}
+      onPress={() => router.push(`/movies/${actorId}`)}
       className={"w-32 h-auto relative pl-4"}
     >
       <Image
-        key={moviePosterUrl}
+        key={posterPath}
         source={{
-          uri: moviePosterUrl
+          uri: posterPath
             ? imagePath
             : "https://placehold.co/600x400/1a1a1a/ffffff.png",
         }}
@@ -48,10 +50,10 @@ const TrendingMovieCard = ({ movieData, index }: TrendingMovieCardProps) => {
         numberOfLines={1}
         className={"text-sm font-bold mt-2 text-custom-white-100"}
       >
-        {movieTitle}
+        {name}
       </Text>
     </TouchableOpacity>
   );
 };
 
-export default TrendingMovieCard;
+export default TrendingActorCard;
