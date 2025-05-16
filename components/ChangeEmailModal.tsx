@@ -74,13 +74,13 @@ const ChangeEmailModal = ({ isOpen, onClose }: ModalProps) => {
         </View>
         <View className={"flex flex-row justify-between mt-4"}>
           <CustomButton
-            buttonClassName={"w-[48%]"}
+            buttonClassName={"w-[48%] h-[40px]"}
             title={"Cancel"}
             onPress={onClose}
           />
           <CustomButton
             isLoading={changingEmail}
-            buttonClassName={"w-[48%]"}
+            buttonClassName={"w-[48%] h-[40px]"}
             title={"Change"}
             onPress={handleSubmit((data) =>
               onSubmit({

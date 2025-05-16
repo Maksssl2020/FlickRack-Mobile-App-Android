@@ -13,16 +13,10 @@ function useAddFavouriteMovieMutation() {
       mutationKey: ["addFavouriteMovie"],
       mutationFn: (data: FavouriteRequest) =>
         handleAddFavouriteMovie(data.userId, data.entityId),
-      onSuccess: (_, data) => {
+      onSuccess: () => {
         Toast.show({
           type: "success",
           text1: "Successfully added movie to favourites.",
-        });
-
-        console.log(data);
-
-        queryClient.invalidateQueries({
-          queryKey: ["movieData", data.entityId.toString()],
         });
       },
       onError: (error: AxiosError<ApiErrorResponse>) => {

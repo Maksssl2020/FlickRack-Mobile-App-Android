@@ -33,6 +33,7 @@ const Home = () => {
       </View>
 
       <FlatList
+        scrollEnabled={false}
         className={"flex-1 h-full"}
         data={tmdbMovies?.slice(0, 6) ?? []}
         keyExtractor={(item) => item.title}
@@ -94,6 +95,7 @@ const Home = () => {
       />
 
       <FlatList
+        scrollEnabled={false}
         className={"flex-1"}
         data={tmdbActors?.slice(0, 6) ?? []}
         keyExtractor={(item) => item.name}

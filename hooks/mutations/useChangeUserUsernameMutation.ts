@@ -4,17 +4,25 @@ import { handleChangeUserUsername } from "@/services/authenticationApi";
 import Toast from "react-native-toast-message";
 import { AxiosError } from "axios";
 import { ApiErrorResponse } from "@/types/ErrorTypes";
+import { useAuthenticationStore } from "@/store/AuthenticationStore";
 
 function useChangeUserUsernameMutation(onSuccess?: () => void) {
+  const { authentication, updateData } = useAuthenticationStore.getState();
+
   const { mutate: changeUsername, isPending: changingUsername } = useMutation({
     mutationKey: ["changeUserUsername"],
     mutationFn: (data: ChangeUsernameRequest) => handleChangeUserUsername(data),
-    onSuccess: () => {
+    onSuccess: (_, variables) => {
       onSuccess?.();
 
       Toast.show({
         type: "success",
         text1: "Successfully changed username.",
+      });
+
+      updateData({
+        ...authentication,
+        username: variables.newUsername,
       });
     },
     onError: (error: AxiosError<ApiErrorResponse>) => {

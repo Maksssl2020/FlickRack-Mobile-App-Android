@@ -17,13 +17,11 @@ function useAddFavouriteActorMutation() {
       mutationFn: (data: FavouriteRequest) =>
         handleAddFavouriteActor(data.userId, data.entityId),
       onSuccess: (_, data) => {
+        console.log("Actor added to favourites successfully");
+
         Toast.show({
           type: "success",
           text1: "Successfully added actor to favourites.",
-        });
-
-        queryClient.refetchQueries({
-          queryKey: ["actorData", data.entityId.toString()],
         });
       },
       onError: (error: AxiosError<ApiErrorResponse>) => {

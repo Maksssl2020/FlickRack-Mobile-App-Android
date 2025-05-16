@@ -26,8 +26,6 @@ const ActorDetails = () => {
   const { updateActorMetricsCount, updatingActorMetricsCount } =
     useUpdateActorMetricsCount();
 
-  console.log("ACTOR DETAILS", actorDataById);
-
   return (
     <View className={"bg-custom-black-100 flex-1"}>
       {fetchingActorById || actorDataById === undefined ? (
@@ -52,6 +50,8 @@ const ActorDetails = () => {
               <AnimatedCustomButton
                 className={`size-10 ${actorDataById.isFavourite ? "bg-custom-white-100 shadow-lg" : "bg-custom-violet-400"}`}
                 onPress={() => {
+                  console.log("Pressed actor fav button");
+
                   if (!actorDataById?.isFavourite) {
                     if (userId && actorDataById?.id) {
                       addActorToFavourites({
@@ -160,7 +160,7 @@ const ActorDetails = () => {
 
       <CustomButton
         title={""}
-        onPress={router.back}
+        onPress={() => router.back()}
         buttonClassName={"absolute bottom-4 self-center w-[95%] h-[50px]"}
       >
         <View className={"flex-row items-center gap-2"}>

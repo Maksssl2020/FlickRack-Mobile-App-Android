@@ -20,10 +20,6 @@ function useDeleteFavouriteActorMutation() {
         type: "success",
         text1: "Successfully removed actor from favourites.",
       });
-
-      queryClient.invalidateQueries({
-        queryKey: ["actorData", data.entityId],
-      });
     },
     onError: (error: AxiosError<ApiErrorResponse>) => {
       const errorMessage = error.response?.data.message;

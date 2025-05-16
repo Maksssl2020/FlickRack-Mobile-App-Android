@@ -8,6 +8,7 @@ import AsyncStorageNative from "@react-native-async-storage/async-storage/src/As
 
 type AuthenticationStoreState = {
   authentication: AuthenticationState;
+  updateData: (data: AuthenticationState) => void;
   login: (data: AuthenticationResponse) => void;
   logout: () => void;
 };
@@ -25,6 +26,12 @@ export const useAuthenticationStore = create<AuthenticationStoreState>()(
   persist(
     (setState) => ({
       authentication: initialAuthenticationState,
+      updateData: (data) =>
+        setState({
+          authentication: {
+            ...data,
+          },
+        }),
       login: (data) =>
         setState({
           authentication: {
